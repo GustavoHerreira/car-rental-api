@@ -1,4 +1,4 @@
-﻿# 🚗 Car Rental API - Bootcamp DIO
+﻿# 🚗 Car Rental API - Projeto DIO
 
 Este projeto está a ser desenvolvido como parte do **Bootcamp da Digital Innovation One (DIO)** com foco em **Minimal APIs em C#**, **Entity Framework Core**, **testes automatizados** e **deploy na AWS**.
 
