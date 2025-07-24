@@ -1,0 +1,28 @@
+# Arquivos e diretórios de build
+bin/
+obj/
+
+# Pacotes NuGet
+/packages/
+*.nupkg
+.nuget/
+NuGet.Config
+
+# Arquivos específicos do Rider
+riderModule.iml
+/_ReSharper.Caches/
+.idea/
+.vs/
+*.user
+*.suo
+
+# Arquivos de log
+*.log
+
+# Resultados de testes
+TestResults/
+
+# Outros arquivos temporários
+*.bak
+_UpgradeReport_Files/ # Arquivos gerados pelo .NET Upgrade Assistant
+```
