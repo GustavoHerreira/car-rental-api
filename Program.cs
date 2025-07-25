@@ -1,8 +1,14 @@
 using CarRentalAPI.Domain.DTOs.Authentication;
+using CarRentalAPI.Domain.Interfaces;
 using CarRentalAPI.Infrastructure.Database;
+using CarRentalAPI.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// DI
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IAdministratorService, AdministratorService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -23,10 +29,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/", () => "Hello World!");
-
-app.MapPost("/login", (LoginDto loginDto) => 
-    loginDto is { Email: "admin@email.com", Password: "123456" } 
+app.MapPost("/login", async (LoginDto loginDto, IAuthenticationService authenticationService) => 
+    await authenticationService.Login(loginDto) 
         ? Results.Ok("Login com sucesso")
         : Results.Unauthorized());
 
