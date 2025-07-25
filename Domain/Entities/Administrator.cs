@@ -15,7 +15,7 @@ public class Administrator
     
     [Required]
     [StringLength(32)]
-    public string Password { get; set; } =string.Empty;
+    public string Password { get; set; } = string.Empty;
     
     [Required]
     [StringLength(16)]
