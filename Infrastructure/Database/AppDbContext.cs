@@ -1,4 +1,5 @@
 ﻿using CarRentalAPI.Domain.Entities;
+using CarRentalAPI.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarRentalAPI.Infrastructure.Database;
@@ -8,7 +9,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration
 {
     
     public DbSet<Administrator> Administrators { get; set; }
-    
+    public DbSet<Vehicle> Vehicles { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -27,7 +28,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration
                     Id = 1,
                     Email = "admin@email.com",
                     Password = "123456",
-                    Role = "admin"
+                    Role = AdminRoleEnum.Admin
                 }
             );
     }

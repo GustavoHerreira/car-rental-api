@@ -2,6 +2,7 @@
 using CarRentalAPI.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarRentalAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250725203431_VehicleMigration")]
+    partial class VehicleMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,9 +42,10 @@ namespace CarRentalAPI.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
-                    b.Property<int>("Role")
+                    b.Property<string>("Role")
+                        .IsRequired()
                         .HasMaxLength(16)
-                        .HasColumnType("integer");
+                        .HasColumnType("character varying(16)");
 
                     b.HasKey("Id");
 
@@ -53,7 +57,7 @@ namespace CarRentalAPI.Migrations
                             Id = 1,
                             Email = "admin@email.com",
                             Password = "123456",
-                            Role = 0
+                            Role = "admin"
                         });
                 });
 

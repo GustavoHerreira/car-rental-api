@@ -1,24 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using CarRentalAPI.Domain.Enums;
 
 namespace CarRentalAPI.Domain.Entities;
 
-public class Administrator
+public class Vehicle
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     
     [Required]
-    [StringLength(255)]
-    public string Email { get; set; } = string.Empty;
+    [StringLength(150)]
+    public string Name { get; set; } = string.Empty;
     
     [Required]
-    [StringLength(32)]
-    public string Password { get; set; } = string.Empty;
+    [StringLength(100)]
+    public string Brand { get; set; } = string.Empty;
     
     [Required]
-    [StringLength(16)]
-    public AdminRoleEnum Role { get; set; }
+    public int Year { get; set; }
 }

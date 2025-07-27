@@ -7,11 +7,11 @@ namespace CarRentalAPI.Domain.Interfaces;
 
 public interface IAdministratorService
 {
-    public Task<Administrator?> GetAdministratorById(int id);
-    public Task<Administrator?> GetAdministratorByEmail(string email);
+    public Task<GetAdministratorDto?> GetAdministratorById(int id);
+    public Task<GetAdministratorDto?> GetAdministratorByEmail(string email);
     public Task<bool> GetAdministratorByLoginAndPassword(LoginDto loginDto);
-    public Task<ICollection<GetAdministratorDto>> GetAllAdministrators();
+    public Task<ICollection<GetAdministratorDto>> GetAllAdministrators(int? page = null, int? itemsPerPage = null);
     public Task<GetAdministratorDto> CreateAdministrator(CreateAdministratorDto createAdministratorDto);
-    public Task<GetAdministratorDto> UpdateAdministratorEmail(UpdateAdministratorEmailDto updateAdministratorEmailDto);
+    public Task<GetAdministratorDto> UpdateAdministrator(int id, UpdateAdministratorDto updateAdministratorDto);
     public Task<bool> DeleteAdministrator(int id);
 }

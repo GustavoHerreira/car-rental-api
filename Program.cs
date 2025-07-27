@@ -1,5 +1,6 @@
-using CarRentalAPI.Domain.DTOs.Authentication;
 using CarRentalAPI.Domain.Interfaces;
+using CarRentalAPI.Domain.ModelViews;
+using CarRentalAPI.Endpoints;
 using CarRentalAPI.Infrastructure.Database;
 using CarRentalAPI.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // DI
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IAdministratorService, AdministratorService>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -25,13 +27,21 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    
+    // Uses NSwag.AspNetCore UI
+    app.UseSwaggerUi(options =>
+        options.DocumentPath = "/openapi/v1.json");
 }
 
 app.UseHttpsRedirection();
 
-app.MapPost("/login", async (LoginDto loginDto, IAuthenticationService authenticationService) => 
-    await authenticationService.Login(loginDto) 
-        ? Results.Ok("Login com sucesso")
-        : Results.Unauthorized());
+// Redireciona a root pro SwaggerUI
+app.MapGet("/", () => Results.Redirect("/swagger", permanent: true))
+    .ExcludeFromDescription(); // Isso oculta o endpoint root do Swagger UI
+
+// Chamada dos métodos de extensão para mapear os endpoints
+app.MapAuthenticationEndpoints();
+app.MapVehicleEndpoints();
+app.MapAdministratorEndpoints();
 
 app.Run();

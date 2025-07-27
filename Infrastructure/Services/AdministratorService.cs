@@ -2,7 +2,8 @@
 using CarRentalAPI.Domain.DTOs.Administrator.Response;
 using CarRentalAPI.Domain.DTOs.Authentication;
 using CarRentalAPI.Domain.Entities;
-using CarRentalAPI.Domain.Exceptions;
+using CarRentalAPI.Domain.Enums;
+using CarRentalAPI.Domain.Exceptions.Users;
 using CarRentalAPI.Domain.Interfaces;
 using CarRentalAPI.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
@@ -11,16 +12,20 @@ namespace CarRentalAPI.Infrastructure.Services;
 
 public class AdministratorService(AppDbContext context) : IAdministratorService
 {
-    public async Task<Administrator?> GetAdministratorById(int id)
+    public async Task<GetAdministratorDto?> GetAdministratorById(int id)
     {
-        var userInDb = await context.Administrators.FirstOrDefaultAsync(x => x.Id == id);
-        return userInDb;
+        var userInDb = await context.Administrators.FindAsync(id);
+        return userInDb is null
+            ? null
+            : new GetAdministratorDto(userInDb.Id, userInDb.Email, userInDb.Role.ToString());
     }
 
-    public async Task<Administrator?> GetAdministratorByEmail(string email)
+    public async Task<GetAdministratorDto?> GetAdministratorByEmail(string email)
     {
         var userInDb = await context.Administrators.FirstOrDefaultAsync(x => x.Email == email);
-        return userInDb;
+        return userInDb is null
+            ? null
+            : new GetAdministratorDto(userInDb.Id, userInDb.Email, userInDb.Role.ToString());
     }
 
     public async Task<bool> GetAdministratorByLoginAndPassword(LoginDto loginDto)
@@ -29,12 +34,30 @@ public class AdministratorService(AppDbContext context) : IAdministratorService
         return userInDb;
     }
 
-    public async Task<ICollection<GetAdministratorDto>> GetAllAdministrators()
+    public async Task<ICollection<GetAdministratorDto>> GetAllAdministrators(int? page = null, int? itemsPerPage = null)
     {
-        var usersInDb = await context.Administrators
-            .Select(a => new GetAdministratorDto(a.Id, a.Email, a.Role))
-            .ToListAsync();
-        return usersInDb;
+        var query = context.Administrators
+            .Select(a => new GetAdministratorDto(a.Id, a.Email, a.Role.ToString()));
+
+        // Padroniza os valores de página e itens por página
+        var currentPage = page.GetValueOrDefault(1); // Assume página 1 como padrão se não informado
+        var currentItemsPerPage = itemsPerPage.GetValueOrDefault(10); // Assume 10 itens por página como padrão
+
+        // Validação adicional para garantir valores positivos
+        if (currentPage < 1) currentPage = 1;
+        if (currentItemsPerPage < 1) currentItemsPerPage = 10;
+
+        // Se ambos page e itemsPerPage são nulos (ou 0), significa que não queremos paginar
+        if (!page.HasValue && !itemsPerPage.HasValue)
+        {
+            return await query.ToListAsync();
+        }
+
+        var skipAmount = (currentPage - 1) * currentItemsPerPage;
+
+        query = query.Skip(skipAmount).Take(currentItemsPerPage);
+
+        return await query.ToListAsync();
     }
 
     public async Task<GetAdministratorDto> CreateAdministrator(CreateAdministratorDto createAdministratorDto)
@@ -43,34 +66,60 @@ public class AdministratorService(AppDbContext context) : IAdministratorService
         if (emailExists)
             throw new DuplicateEmailException(email: createAdministratorDto.Email);
         
+        // Verificar se o valor do Role é válido
+        if (!Enum.TryParse<AdminRoleEnum>(createAdministratorDto.Role, true, out var parsedRole))
+        {
+            throw new ArgumentException($"O valor '{createAdministratorDto.Role}' não é válido para o campo 'Role'. Valores permitidos: {string.Join(", ", Enum.GetNames<AdminRoleEnum>())}");
+        }
+        
         var newAdministrator = new Administrator
         {
             Email = createAdministratorDto.Email,
             Password = createAdministratorDto.Password,
-            Role = "admin"
+            Role = parsedRole
         };
         
         await context.Administrators.AddAsync(newAdministrator);
         await context.SaveChangesAsync();
-        return new GetAdministratorDto(newAdministrator.Id, newAdministrator.Email, newAdministrator.Role);
+        return new GetAdministratorDto(newAdministrator.Id, newAdministrator.Email, newAdministrator.Role.ToString());
     }
 
-    public async Task<GetAdministratorDto> UpdateAdministratorEmail(UpdateAdministratorEmailDto updateAdministratorDto)
+    public async Task<GetAdministratorDto> UpdateAdministrator(int id, UpdateAdministratorDto updateAdministratorDto)
     {
-        var administratorToUpdate = await context.Administrators.FirstOrDefaultAsync(a => a.Id == updateAdministratorDto.Id);
+        if (id != updateAdministratorDto.Id)
+            throw new InvalidOperationException(
+                $"O ID na URL ({id}) não corresponde ao ID do administrador no corpo da requisição ({updateAdministratorDto.Id}).");
 
-        if (administratorToUpdate == null)
-            throw new InvalidOperationException($"Administrador com ID {updateAdministratorDto.Id} não encontrado.");
+        var administratorToUpdate = await context.Administrators.FindAsync(updateAdministratorDto.Id)
+                                    ?? throw new InvalidOperationException($"Administrador com ID {updateAdministratorDto.Id} não encontrado.");
 
-        administratorToUpdate.Email = updateAdministratorDto.Email;
-        await context.SaveChangesAsync();
-        
+        // Atualiza apenas os campos não nulos
+        if (!string.IsNullOrEmpty(updateAdministratorDto.Email))
+            administratorToUpdate.Email = updateAdministratorDto.Email;
+
+        if (!string.IsNullOrEmpty(updateAdministratorDto.Role))
+        {
+            if (Enum.TryParse<AdminRoleEnum>(updateAdministratorDto.Role, true, out var parsedRole))
+            {
+                administratorToUpdate.Role = parsedRole;
+            }
+            else
+            {
+                throw new ArgumentException($"O valor '{updateAdministratorDto.Role}' não é válido para o campo 'Role'.");
+            }
+        }
+
+        // Salva alterações apenas se algo for modificado
+        if (context.Entry(administratorToUpdate).State == EntityState.Modified)
+            await context.SaveChangesAsync();
+
         return new GetAdministratorDto(
             administratorToUpdate.Id,
             administratorToUpdate.Email,
-            administratorToUpdate.Role
+            administratorToUpdate.Role.ToString()
         );
     }
+
 
     public async Task<bool> DeleteAdministrator(int id)
     {

@@ -1,4 +1,4 @@
-﻿namespace CarRentalAPI.Domain.Exceptions;
+﻿namespace CarRentalAPI.Domain.Exceptions.Users;
 
 public class UserIdNotFoundException : Exception
 {
