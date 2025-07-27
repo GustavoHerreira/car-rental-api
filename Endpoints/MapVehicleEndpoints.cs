@@ -17,7 +17,7 @@ public static class VehicleEndpoints
 
         vehicleGroup.MapGet("/",
             async ([FromQuery] int? page, [FromQuery] int? itemsPerPage, IVehicleService vehicleService) =>
-            Results.Ok(await vehicleService.GetAllVehicles(page, itemsPerPage)));
+                Results.Ok(await vehicleService.GetAllVehicles(page, itemsPerPage)));
 
         vehicleGroup.MapGet("/{id:int}", async (int id, IVehicleService vehicleService) =>
         {

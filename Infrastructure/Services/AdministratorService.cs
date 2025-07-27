@@ -22,7 +22,9 @@ public class AdministratorService(AppDbContext context) : IAdministratorService
 
     public async Task<GetAdministratorDto?> GetAdministratorByEmail(string email)
     {
-        var userInDb = await context.Administrators.FirstOrDefaultAsync(x => x.Email == email);
+        var userInDb = await context
+            .Administrators
+            .FirstOrDefaultAsync(a =>a.Email == email);
         return userInDb is null
             ? null
             : new GetAdministratorDto(userInDb.Id, userInDb.Email, userInDb.Role.ToString());
@@ -90,7 +92,8 @@ public class AdministratorService(AppDbContext context) : IAdministratorService
             throw new InvalidOperationException(
                 $"O ID na URL ({id}) não corresponde ao ID do administrador no corpo da requisição ({updateAdministratorDto.Id}).");
 
-        var administratorToUpdate = await context.Administrators.FindAsync(updateAdministratorDto.Id)
+        var administratorToUpdate = await context.Administrators
+                                        .FindAsync(updateAdministratorDto.Id)
                                     ?? throw new InvalidOperationException($"Administrador com ID {updateAdministratorDto.Id} não encontrado.");
 
         // Atualiza apenas os campos não nulos
