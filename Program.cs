@@ -1,9 +1,10 @@
 using CarRentalAPI.Domain.Interfaces;
-using CarRentalAPI.Domain.ModelViews;
 using CarRentalAPI.Endpoints;
 using CarRentalAPI.Infrastructure.Database;
 using CarRentalAPI.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,29 @@ builder.Services.AddScoped<IVehicleService, VehicleService>();
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// JWT
+var jwtKey = builder.Configuration.GetSection("Jwt").GetValue<string>("Key")
+             ?? throw new Exception("The JWT token is not configured correctly");
+
+// Isso permite que a jwtKey seja injetada em qualquer lugar da aplicação
+builder.Services.AddSingleton(jwtKey);
+
+
+builder.Services.AddAuthentication(configs =>
+{
+    configs.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    configs.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    configs.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateLifetime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtKey)),
+    };
+});
+builder.Services.AddAuthorization();
 
 // Registra o AppDbContext com a string de conexão do appsettings.json
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -43,5 +67,8 @@ app.MapGet("/", () => Results.Redirect("/swagger", permanent: true))
 app.MapAuthenticationEndpoints();
 app.MapVehicleEndpoints();
 app.MapAdministratorEndpoints();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

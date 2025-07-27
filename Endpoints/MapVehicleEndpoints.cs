@@ -13,6 +13,7 @@ public static class VehicleEndpoints
         // Isso ajuda a organizar ainda mais e permite aplicar filtros ou tags a um grupo inteiro.
         var vehicleGroup = app.MapGroup("/vehicle")
             .WithTags("Veículos")
+            .RequireAuthorization()
             .WithOpenApi();
 
         vehicleGroup.MapGet("/",

@@ -13,6 +13,7 @@ public static class AdministratorEndpoints
         // Cria um grupo de endpoints para prefixar todas as rotas com "/admin"
         var adminGroup = app.MapGroup("/admin")
             .WithTags("Admin")
+            .RequireAuthorization()
             .WithOpenApi();
 
         adminGroup.MapGet("/", 
@@ -52,7 +53,7 @@ public static class AdministratorEndpoints
                 {
                     return Results.BadRequest(new { Error = ex.Message });
                 }
-            });
+            }).AllowAnonymous();
 
         adminGroup.MapPut("/{id:int}",
             async (int id, UpdateAdministratorDto updateAdminDto, IAdministratorService administratorService) =>

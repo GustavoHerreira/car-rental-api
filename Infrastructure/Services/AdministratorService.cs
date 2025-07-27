@@ -30,9 +30,9 @@ public class AdministratorService(AppDbContext context) : IAdministratorService
             : new GetAdministratorDto(userInDb.Id, userInDb.Email, userInDb.Role.ToString());
     }
 
-    public async Task<bool> GetAdministratorByLoginAndPassword(LoginDto loginDto)
+    public async Task<Administrator?> GetAdministratorByLoginAndPassword(LoginDto loginDto)
     {
-        var userInDb =  await context.Administrators.AnyAsync(a => a.Email == loginDto.Email && a.Password == loginDto.Password);
+        var userInDb =  await context.Administrators.FirstOrDefaultAsync(a => a.Email == loginDto.Email && a.Password == loginDto.Password);
         return userInDb;
     }
 

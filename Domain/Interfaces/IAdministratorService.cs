@@ -9,7 +9,7 @@ public interface IAdministratorService
 {
     public Task<GetAdministratorDto?> GetAdministratorById(int id);
     public Task<GetAdministratorDto?> GetAdministratorByEmail(string email);
-    public Task<bool> GetAdministratorByLoginAndPassword(LoginDto loginDto);
+    public Task<Administrator?> GetAdministratorByLoginAndPassword(LoginDto loginDto);
     public Task<ICollection<GetAdministratorDto>> GetAllAdministrators(int? page = null, int? itemsPerPage = null);
     public Task<GetAdministratorDto> CreateAdministrator(CreateAdministratorDto createAdministratorDto);
     public Task<GetAdministratorDto> UpdateAdministrator(int id, UpdateAdministratorDto updateAdministratorDto);

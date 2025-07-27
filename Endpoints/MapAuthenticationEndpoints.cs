@@ -1,5 +1,6 @@
 ﻿using CarRentalAPI.Domain.DTOs.Authentication;
 using CarRentalAPI.Domain.Interfaces;
+using CarRentalAPI.Domain.ModelViews;
 
 namespace CarRentalAPI.Endpoints;
 
@@ -10,11 +11,14 @@ public static class AuthenticationEndpoints
         var authGroup = app.MapGroup("/auth")
             .WithTags("Authentication")
             .WithOpenApi();
-        
+
         authGroup.MapPost("/admin/login",
             async (LoginDto loginDto, IAuthenticationService authenticationService) =>
-                await authenticationService.Login(loginDto)
-                    ? Results.Ok("Login com sucesso")
-                    : Results.Unauthorized());
+            {
+                var loggedAdmin = await authenticationService.Login(loginDto);
+                return loggedAdmin is not null
+                    ? Results.Ok(loggedAdmin)
+                    : Results.Unauthorized();
+            });
     }
 }
