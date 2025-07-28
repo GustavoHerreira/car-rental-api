@@ -11,7 +11,7 @@ public static class VehicleEndpoints
     {
         // Grupo de endpoints com prefixo "/vehicle"
         var vehicleGroup = app.MapGroup("/vehicle")
-            .RequireAuthorization("AdminOnly")
+            .RequireAuthorization("EditorOrAdmin")
             .WithTags("Vehicles")
             .WithOpenApi();
 
@@ -29,7 +29,6 @@ public static class VehicleEndpoints
 
         // POST: Criar veículo
         vehicleGroup.MapPost("/", CreateVehicle)
-            .RequireAuthorization("EditorOrAdmin")
             .WithName("CreateVehicle")
             .WithSummary("Cria um novo veículo")
             .WithDescription("Cria um novo registro de veículo no sistema");
@@ -43,6 +42,7 @@ public static class VehicleEndpoints
 
         // DELETE: Excluir veículo
         vehicleGroup.MapDelete("/{id:int}", DeleteVehicle)
+            .RequireAuthorization("AdminOnly")
             .WithName("DeleteVehicle")
             .WithSummary("Remove um veículo")
             .WithDescription("Remove permanentemente um veículo do sistema");
