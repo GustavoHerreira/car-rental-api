@@ -1,3 +1,5 @@
-﻿namespace CarRentalAPI.Domain.DTOs.Administrator.Request;
+namespace CarRentalAPI.Domain.DTOs.Administrator.Request;
 
-public record UpdateAdministratorDto(int Id, string? Email, string? Role);
+using CarRentalAPI.Domain.Enums;
+
+public record UpdateAdministratorDto(int Id, string? Email, AdminRoleEnum? Role);

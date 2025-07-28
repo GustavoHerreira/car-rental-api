@@ -17,6 +17,7 @@ public class AuthenticationService(IAdministratorService adminService, string jw
 
         var claims = new List<Claim>()
         {
+            new(ClaimTypes.NameIdentifier, admin.Id.ToString()),
             new(ClaimTypes.Email, admin.Email),
             new(ClaimTypes.Role, admin.Role.ToString())
         };
@@ -42,5 +43,4 @@ public class AuthenticationService(IAdministratorService adminService, string jw
             Token: GenerateJwtForUser(admin)
         );
     }
-
 }
