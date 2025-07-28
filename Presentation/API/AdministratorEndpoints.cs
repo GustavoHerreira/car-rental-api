@@ -11,7 +11,7 @@ public static class AdministratorEndpoints
         // Grupo de endpoints com prefixo "/admin"
         var adminGroup = app.MapGroup("/admin")
             .WithTags("Administrators")
-            .RequireAuthorization()
+            .RequireAuthorization("AdminOnly")
             .WithOpenApi();
 
         // GET: Listar todos os administradores

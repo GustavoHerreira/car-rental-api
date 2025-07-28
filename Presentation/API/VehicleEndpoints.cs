@@ -11,8 +11,8 @@ public static class VehicleEndpoints
     {
         // Grupo de endpoints com prefixo "/vehicle"
         var vehicleGroup = app.MapGroup("/vehicle")
+            .RequireAuthorization("AdminOnly")
             .WithTags("Vehicles")
-            .RequireAuthorization()
             .WithOpenApi();
 
         // GET: Listar todos os veículos
@@ -29,12 +29,14 @@ public static class VehicleEndpoints
 
         // POST: Criar veículo
         vehicleGroup.MapPost("/", CreateVehicle)
+            .RequireAuthorization("EditorOrAdmin")
             .WithName("CreateVehicle")
             .WithSummary("Cria um novo veículo")
             .WithDescription("Cria um novo registro de veículo no sistema");
 
         // PUT: Atualizar veículo
         vehicleGroup.MapPut("/{id:int}", UpdateVehicle)
+            .RequireAuthorization("EditorOrAdmin")
             .WithName("UpdateVehicle")
             .WithSummary("Atualiza um veículo existente")
             .WithDescription("Atualiza os dados de um veículo existente com base no ID");

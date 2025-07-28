@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using System.Text;
-
+using CarRentalAPI.Domain.Enums;
 using CarRentalAPI.Domain.Interfaces;
 using CarRentalAPI.Infrastructure.Database;
 using CarRentalAPI.Infrastructure.Services;
@@ -77,7 +77,17 @@ public static class ServiceCollectionExtensions
             };
         });
 
-        services.AddAuthorization();
+        // Configuração de autorização com Roles
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("AdminOnly", policy => 
+                policy.RequireRole(AdminRoleEnum.Admin.ToString()));
+
+            options.AddPolicy("EditorOrAdmin", policy =>
+                policy.RequireRole(
+                    AdminRoleEnum.Admin.ToString(), 
+                    AdminRoleEnum.Editor.ToString()));
+        });
         
         return services;
     }
