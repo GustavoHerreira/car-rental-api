@@ -19,24 +19,27 @@ public class VehicleEndpointsTests
         var vehicle = new Vehicle { Name = "TestCar", Brand = "TestBrand", Year = 2024 };
         var createResponse = await client.PostAsJsonAsync("/vehicle", vehicle);
         Assert.AreEqual(HttpStatusCode.Created, createResponse.StatusCode);
-        var created = await createResponse.Content.ReadFromJsonAsync<dynamic>();
-        int id = created.id;
-        Assert.AreEqual(vehicle.Name, (string)created.name);
-        Assert.AreEqual(vehicle.Brand, (string)created.brand);
-        Assert.AreEqual(vehicle.Year, (int)created.year);
+        var created = await createResponse.Content.ReadFromJsonAsync<Vehicle>();
+        Assert.IsNotNull(created);
+        int id = created.Id;
+        Assert.AreEqual(vehicle.Name, created.Name);
+        Assert.AreEqual(vehicle.Brand, created.Brand);
+        Assert.AreEqual(vehicle.Year, created.Year);
 
         // GET BY ID
         var getResponse = await client.GetAsync($"/vehicle/{id}");
         Assert.AreEqual(HttpStatusCode.OK, getResponse.StatusCode);
-        var getVehicle = await getResponse.Content.ReadFromJsonAsync<dynamic>();
-        Assert.AreEqual(vehicle.Name, (string)getVehicle.name);
+        var getVehicle = await getResponse.Content.ReadFromJsonAsync<Vehicle>();
+        Assert.IsNotNull(getVehicle);
+        Assert.AreEqual(vehicle.Name, getVehicle.Name);
 
         // UPDATE
         vehicle.Name = "UpdatedCar";
         var updateResponse = await client.PutAsJsonAsync($"/vehicle/{id}", vehicle);
         Assert.AreEqual(HttpStatusCode.OK, updateResponse.StatusCode);
-        var updated = await updateResponse.Content.ReadFromJsonAsync<dynamic>();
-        Assert.AreEqual("UpdatedCar", (string)updated.name);
+        var updated = await updateResponse.Content.ReadFromJsonAsync<Vehicle>();
+        Assert.IsNotNull(updated);
+        Assert.AreEqual("UpdatedCar", updated.Name);
 
         // DELETE
         var deleteResponse = await client.DeleteAsync($"/vehicle/{id}");
