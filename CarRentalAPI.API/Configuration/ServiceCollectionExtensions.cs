@@ -37,7 +37,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         // Chave JWT
-        var jwtSection = configuration.GetSection("Jwt");
         var jwtKey = configuration["Jwt:Key"] ?? 
                     throw new InvalidOperationException("A chave JWT não está configurada no appsettings.json");
 
@@ -80,12 +79,13 @@ public static class ServiceCollectionExtensions
         services.AddAuthorization(options =>
         {
             options.AddPolicy("AdminOnly", policy => 
-                policy.RequireRole(AdminRoleEnum.Admin.ToString()));
+                policy.RequireRole(nameof(AdminRoleEnum.Admin)));
 
             options.AddPolicy("EditorOrAdmin", policy =>
                 policy.RequireRole(
-                    AdminRoleEnum.Admin.ToString(), 
-                    AdminRoleEnum.Editor.ToString()));
+                    nameof(AdminRoleEnum.Admin),
+                    nameof(AdminRoleEnum.Editor)
+                ));
         });
         
         return services;

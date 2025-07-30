@@ -2,8 +2,7 @@
 using CarRentalAPI.Domain.DTOs.Administrator.Response;
 using CarRentalAPI.Domain.DTOs.Authentication;
 using CarRentalAPI.Domain.Entities;
-using CarRentalAPI.Domain.Enums;
-using CarRentalAPI.Domain.Exceptions.Users;
+using CarRentalAPI.Domain.Exceptions.Administrator;
 using CarRentalAPI.Domain.Interfaces;
 using CarRentalAPI.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;

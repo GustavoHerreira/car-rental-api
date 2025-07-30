@@ -31,7 +31,6 @@ public class AdministratorTests
         Assert.AreEqual(0, admin.Id);
         Assert.AreEqual(string.Empty, admin.Email);
         Assert.AreEqual(string.Empty, admin.Password);
-        // Role is an enum, default is 0 (Admin)
         Assert.AreEqual(AdminRoleEnum.Admin, admin.Role);
     }
 }

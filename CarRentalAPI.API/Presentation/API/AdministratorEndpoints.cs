@@ -1,4 +1,5 @@
 using CarRentalAPI.Domain.DTOs.Administrator.Request;
+using CarRentalAPI.Domain.Exceptions.Administrator;
 using CarRentalAPI.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -91,6 +92,10 @@ public static class AdministratorEndpoints
             var newAdmin = await administratorService.CreateAdministrator(createAdminDto);
             return Results.Created($"/admin/id/{newAdmin.Id}", newAdmin);
         }
+        catch (DuplicateEmailException ex)
+        {
+            return Results.BadRequest(new { Error = ex.Message });
+        }
         catch (Exception ex)
         {
             return Results.BadRequest(new { Error = ex.Message });
@@ -117,9 +122,18 @@ public static class AdministratorEndpoints
         int id, 
         IAdministratorService administratorService)
     {
-        var result = await administratorService.DeleteAdministrator(id);
-        return result
-            ? Results.NoContent()
-            : Results.NotFound();
+        try
+        {
+            var result = await administratorService.DeleteAdministrator(id);
+            return Results.NoContent();
+        }
+        catch (UserIdNotFoundException ex)
+        {
+            return Results.NotFound(new { Error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return Results.BadRequest(new { Error = ex.Message });
+        }
     }
 }

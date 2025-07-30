@@ -1,4 +1,4 @@
-﻿namespace CarRentalAPI.Domain.Exceptions.Users;
+﻿namespace CarRentalAPI.Domain.Exceptions.Administrator;
 
 public class UserEmailNotFoundException : Exception
 {

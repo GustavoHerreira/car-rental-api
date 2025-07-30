@@ -35,7 +35,7 @@ public static class VehicleEndpoints
 
         // PUT: Atualizar veículo
         vehicleGroup.MapPut("/{id:int}", UpdateVehicle)
-            .RequireAuthorization("EditorOrAdmin")
+            .RequireAuthorization("AdminOnly")
             .WithName("UpdateVehicle")
             .WithSummary("Atualiza um veículo existente")
             .WithDescription("Atualiza os dados de um veículo existente com base no ID");

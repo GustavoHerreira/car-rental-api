@@ -1,11 +1,10 @@
-using System.Threading.Tasks;
 using CarRentalAPI.Domain.DTOs.Authentication;
 using CarRentalAPI.Domain.Entities;
 using CarRentalAPI.Domain.Enums;
 using CarRentalAPI.Domain.Interfaces;
-using CarRentalAPI.Domain.ModelViews;
 using CarRentalAPI.Infrastructure.Services;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using CarRentalAPI.Domain.Options;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace CarRentalAPI.Tests.Infrastructure.Services;
@@ -13,19 +12,34 @@ namespace CarRentalAPI.Tests.Infrastructure.Services;
 [TestClass]
 public class AuthenticationServiceTests
 {
+    // Mocks e serviços declarados no escopo da classe
+    private Mock<IAdministratorService> _mockAdminService = null!;
+    private AuthenticationService _authService = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _mockAdminService = new Mock<IAdministratorService>();
+
+        // Key hardcoded porque é um teste de UNIDADE (isolado)
+        const string jwtKey = "SecretKeyMinimalApiChaveSuperSeguraComTamanhoAdequado32";
+        var jwtOptions = Options.Create(new JwtOptions { Key = jwtKey });
+
+        _authService = new AuthenticationService(_mockAdminService.Object, jwtOptions);
+    }
+
     [TestMethod]
     public async Task Login_ReturnsLoggedAdmin_WhenCredentialsAreValid()
     {
         // Arrange
         var loginDto = new LoginDto("admin@email.com", "123456");
-        var admin = new Administrator { Id = 1, Email = loginDto.Email, Password = loginDto.Password, Role = AdminRoleEnum.Admin };
-        var mockAdminService = new Mock<IAdministratorService>();
-        mockAdminService.Setup(s => s.GetAdministratorByLoginAndPassword(loginDto)).ReturnsAsync(admin);
-        var jwtKey = "test_jwt_key_12345678901234567890123456789012"; // 32+ chars for HMAC
-        var authService = new AuthenticationService(mockAdminService.Object, jwtKey);
+        var admin = new Administrator { Id = 1, Email = loginDto.Email, Role = AdminRoleEnum.Admin };
+        
+        _mockAdminService.Setup(s => s.GetAdministratorByLoginAndPassword(loginDto))
+                         .ReturnsAsync(admin);
 
         // Act
-        var result = await authService.Login(loginDto);
+        var result = await _authService.Login(loginDto);
 
         // Assert
         Assert.IsNotNull(result);
@@ -40,13 +54,12 @@ public class AuthenticationServiceTests
     {
         // Arrange
         var loginDto = new LoginDto("wrong@email.com", "wrongpass");
-        var mockAdminService = new Mock<IAdministratorService>();
-        mockAdminService.Setup(s => s.GetAdministratorByLoginAndPassword(loginDto)).ReturnsAsync((Administrator?)null);
-        var jwtKey = "test_jwt_key_12345678901234567890123456789012";
-        var authService = new AuthenticationService(mockAdminService.Object, jwtKey);
+
+        _mockAdminService.Setup(s => s.GetAdministratorByLoginAndPassword(loginDto))
+                         .ReturnsAsync((Administrator?)null);
 
         // Act
-        var result = await authService.Login(loginDto);
+        var result = await _authService.Login(loginDto);
 
         // Assert
         Assert.IsNull(result);

@@ -16,17 +16,21 @@ public class VehicleServiceTests
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(databaseName: dbName)
             .Options;
-        var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
-        return new AppDbContext(options, configuration);
+        return new AppDbContext(options);
     }
 
     [TestMethod]
     public async Task AddAsync_AddsVehicleToDb()
     {
+        // Arrange
         var db = GetDbContext(nameof(AddAsync_AddsVehicleToDb));
         var service = new VehicleService(db);
         var vehicle = new Vehicle { Name = "Car", Brand = "Brand", Year = 2020 };
+
+        // Act
         var result = await service.AddAsync(vehicle);
+
+        // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual("Car", result.Name);
         Assert.AreEqual(1, await db.Vehicles.CountAsync());
@@ -35,24 +39,71 @@ public class VehicleServiceTests
     [TestMethod]
     public async Task GetByIdAsync_ReturnsCorrectVehicle()
     {
+        // Arrange
         var db = GetDbContext(nameof(GetByIdAsync_ReturnsCorrectVehicle));
         db.Vehicles.Add(new Vehicle { Name = "Test", Brand = "B", Year = 2021 });
         db.SaveChanges();
         var service = new VehicleService(db);
+
+        // Act
         var vehicle = await service.GetByIdAsync(1);
+
+        // Assert
         Assert.IsNotNull(vehicle);
         Assert.AreEqual("Test", vehicle.Name);
     }
 
     [TestMethod]
+    public async Task GetAllAsync_ReturnsAllVehicles()
+    {
+        // Arrange
+        var db = GetDbContext(nameof(GetAllAsync_ReturnsAllVehicles));
+        db.Vehicles.Add(new Vehicle { Name = "Car1", Brand = "BrandA", Year = 2020 });
+        db.Vehicles.Add(new Vehicle { Name = "Car2", Brand = "BrandB", Year = 2021 });
+        db.SaveChanges();
+        var service = new VehicleService(db);
+
+        // Act
+        var vehicles = await service.GetAllAsync();
+
+        // Assert
+        Assert.AreEqual(2, vehicles.Count);
+    }
+
+    [TestMethod]
     public async Task DeleteAsync_RemovesVehicle()
     {
+        // Arrange
         var db = GetDbContext(nameof(DeleteAsync_RemovesVehicle));
         db.Vehicles.Add(new Vehicle { Name = "Del", Brand = "B", Year = 2022 });
         db.SaveChanges();
         var service = new VehicleService(db);
+
+        // Act
         var result = await service.DeleteAsync(1);
+
+        // Assert
         Assert.IsTrue(result);
         Assert.AreEqual(0, await db.Vehicles.CountAsync());
+    }
+
+    [TestMethod]
+    public async Task UpdateAsync_UpdatesVehicleFields()
+    {
+        // Arrange
+        var db = GetDbContext(nameof(UpdateAsync_UpdatesVehicleFields));
+        db.Vehicles.Add(new Vehicle { Name = "OldName", Brand = "OldBrand", Year = 2019 });
+        db.SaveChanges();
+        var service = new VehicleService(db);
+        var updatedVehicle = new Vehicle { Name = "NewName", Brand = "NewBrand", Year = 2022 };
+
+        // Act
+        var result = await service.UpdateAsync(updatedVehicle);
+        var allCars = db.Vehicles.ToList();
+
+        // Assert
+        Assert.AreEqual("NewName", result.Name);
+        Assert.AreEqual("NewBrand", result.Brand);
+        Assert.AreEqual(2022, result.Year);
     }
 }
