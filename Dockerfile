@@ -1,19 +1,13 @@
-# Estágio de build
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-WORKDIR /app
-
-# Copia arquivos de projeto e solução para restaurar pacotes em cache
+WORKDIR /src
 COPY ["CarRentalAPI.API/CarRentalAPI.csproj", "CarRentalAPI.API/"]
-COPY ["CarRentalAPI.Tests/CarRentalAPI.Tests.csproj", "CarRentalAPI.Tests/"]
-COPY ["CarRentalAPI.sln", "./"]
-RUN dotnet restore "CarRentalAPI.sln"
-
-# Copia o resto do código e publica a aplicação
+RUN dotnet restore "CarRentalAPI.API/CarRentalAPI.csproj"
 COPY . .
 RUN dotnet publish "CarRentalAPI.API/CarRentalAPI.csproj" -c Release -o /app/publish --no-restore
 
-# Estágio final (runtime)
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "CarRentalAPI.dll"]

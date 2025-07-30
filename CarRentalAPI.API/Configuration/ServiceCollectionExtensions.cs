@@ -38,7 +38,7 @@ public static class ServiceCollectionExtensions
     {
         // Chave JWT
         var jwtSection = configuration.GetSection("Jwt");
-        var jwtKey = jwtSection.GetValue<string>("Key") ?? 
+        var jwtKey = configuration["Jwt:Key"] ?? 
                     throw new InvalidOperationException("A chave JWT não está configurada no appsettings.json");
 
         services.AddAuthentication(options =>

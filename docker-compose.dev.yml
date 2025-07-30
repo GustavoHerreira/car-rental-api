@@ -1,38 +1,45 @@
+# Basicamente docker-compose só que com Hot Reload
+
 services:
-  # API .NET 9
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    # Comando para substituir o ENTRYPOINT do Dockerfile('dotnet watch' para habilitar o hot reload).
+    command: ["dotnet", "watch", "run", "--project", "CarRentalAPI.API/CarRentalAPI.csproj", "--urls", "http://+:8080"]
     ports:
       - "8080:8080"
     environment:
+      # env como Development
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      # O host 'db' refere-se ao serviço do Postgres abaixo
-      - "ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=carrental;Username=user;Password=password"
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
     volumes:
-      # Bind mount para refletir o código local no container
-      - ./CarRentalAPI.API:/app/CarRentalAPI.API
-      - ./CarRentalAPI.Tests:/app/CarRentalAPI.Tests
-    # Inicia a API com hot reload
-    command: ["dotnet", "watch", "run", "--project", "/app/CarRentalAPI.API/CarRentalAPI.csproj"]
+      # Bind Mount: Espelha o código local para dentro do contêiner.
+      # Qualquer alteração no código é refletida instantaneamente.
+      - ./CarRentalAPI.API:/src/CarRentalAPI.API
+      - ./CarRentalAPI.sln:/src/CarRentalAPI.sln
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
-  # Banco de Dados Postgres
   db:
     image: postgres:16
     environment:
-      - POSTGRES_DB=carrental
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-    ports:
-      # Porta para acesso externo
-      - "5432:5432"
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      # Persistência dos dados
       - postgres_data:/var/lib/postgresql/data
+    # Expõe a porta do banco para conexão externa (Rider, DBeaver)
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   postgres_data:

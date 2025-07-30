@@ -1,38 +1,32 @@
-# Docker Compose para Produção
+version: '3.8'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    # Garante que o container reinicie automaticamente em caso de falha.
-    restart: always
+    build: .
     ports:
       - "8080:8080"
     environment:
-      # Ativa otimizações de produção do ASP.NET Core.
-      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
-      # As credenciais são carregadas a partir do arquivo .env na raiz.
-      - "ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:16
-    restart: always
     environment:
-      # Carrega as variáveis do arquivo .env.
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      # Persiste os dados do banco de dados.
       - postgres_data:/var/lib/postgresql/data
-    # A porta do banco não é exposta publicamente.
-    # A comunicação ocorre pela rede interna do Docker.
+    healthcheck:
+      # Modificação: Usando as variáveis no healthcheck também
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   postgres_data:
-    # Nome explícito para o volume, evitando remoção acidental.
-    name: carrental-postgres-data
