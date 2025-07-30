@@ -4,7 +4,7 @@ using CarRentalAPI.Domain.Enums;
 using CarRentalAPI.Domain.Interfaces;
 using CarRentalAPI.Infrastructure.Database;
 using CarRentalAPI.Infrastructure.Services;
-
+using CarRentalAPI.Domain.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -17,7 +17,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Registra os serviços da aplicação
+        // Configuração fortemente tipada para JWT
+        services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IAdministratorService, AdministratorService>();
         services.AddScoped<IVehicleService, VehicleService>();
@@ -39,8 +40,6 @@ public static class ServiceCollectionExtensions
         var jwtSection = configuration.GetSection("Jwt");
         var jwtKey = jwtSection.GetValue<string>("Key") ?? 
                     throw new InvalidOperationException("A chave JWT não está configurada no appsettings.json");
-        
-        services.AddSingleton(jwtKey);
 
         services.AddAuthentication(options =>
         {
@@ -120,14 +119,16 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
-        // Registra o DbContext
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(
-                configuration.GetConnectionString("DefaultConnection") ?? 
-                throw new InvalidOperationException("String de conexão 'DefaultConnection' não encontrada")));
-        
+        // Apenas registra o PostgreSQL se NÃO estiver em ambiente de testes
+        if (!env.IsEnvironment("Testing"))
+        {
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseNpgsql(
+                    configuration.GetConnectionString("DefaultConnection") ??
+                    throw new InvalidOperationException("String de conexão 'DefaultConnection' não encontrada")));
+        }
         return services;
     }
 }

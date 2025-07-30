@@ -1,0 +1,38 @@
+services:
+  # API .NET 9
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      # O host 'db' refere-se ao serviço do Postgres abaixo
+      - "ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=carrental;Username=user;Password=password"
+    volumes:
+      # Bind mount para refletir o código local no container
+      - ./CarRentalAPI.API:/app/CarRentalAPI.API
+      - ./CarRentalAPI.Tests:/app/CarRentalAPI.Tests
+    # Inicia a API com hot reload
+    command: ["dotnet", "watch", "run", "--project", "/app/CarRentalAPI.API/CarRentalAPI.csproj"]
+    depends_on:
+      - db
+
+  # Banco de Dados Postgres
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=carrental
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      # Porta para acesso externo
+      - "5432:5432"
+    volumes:
+      # Persistência dos dados
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

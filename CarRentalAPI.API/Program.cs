@@ -11,9 +11,13 @@ public class Program
         // Configuração dos serviços da aplicação
         builder.Services
             .ConfigureServices(builder.Configuration)
-            .ConfigureAuthentication(builder.Configuration)
             .ConfigureSwagger()
-            .ConfigureDatabase(builder.Configuration);
+            .ConfigureDatabase(builder.Configuration, builder.Environment);
+
+            if (!builder.Environment.IsEnvironment("Testing"))
+            {
+                builder.Services.ConfigureAuthentication(builder.Configuration);
+            }
 
         #endregion
 

@@ -5,14 +5,18 @@ using CarRentalAPI.Domain.Entities;
 using CarRentalAPI.Domain.Interfaces;
 using CarRentalAPI.Domain.ModelViews;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Options;
+using CarRentalAPI.Domain.Options;
 
 namespace CarRentalAPI.Infrastructure.Services;
 
-public class AuthenticationService(IAdministratorService adminService, string jwtKey) : IAuthenticationService 
+public class AuthenticationService(IAdministratorService adminService, IOptions<JwtOptions> jwtOptions) : IAuthenticationService
 {
+    private readonly string _jwtKey = jwtOptions.Value.Key;
+
     private string GenerateJwtForUser(Administrator admin)
     {
-        var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtKey));
+        var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_jwtKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>()

@@ -4,19 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarRentalAPI.Infrastructure.Database;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration)
+public class AppDbContext(DbContextOptions<AppDbContext> options)
     : DbContext(options)
 {
     
     public DbSet<Administrator> Administrators { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-        }
-    }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
