@@ -19,6 +19,9 @@ riderModule.iml
 # Arquivos de log
 *.log
 
+# Arquivos "secretos"
+*.env
+
 # Resultados de testes
 TestResults/
 
