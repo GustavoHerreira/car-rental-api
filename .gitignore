@@ -21,6 +21,7 @@ riderModule.iml
 
 # Arquivos "secretos"
 *.env
+*.pem
 
 # Resultados de testes
 TestResults/

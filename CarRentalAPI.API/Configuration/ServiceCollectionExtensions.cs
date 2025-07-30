@@ -24,7 +24,19 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IVehicleService, VehicleService>();
 
         services.AddEndpointsApiExplorer();
-
+        
+        // Exemplo para produção
+        services.AddCors(options =>
+        {
+            options.AddPolicy(name: "cors_policy",
+                policy =>
+                {
+                    policy.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+        });
+        
         // ENUM as string
         services.ConfigureHttpJsonOptions(options =>
         {
@@ -99,8 +111,9 @@ public static class ServiceCollectionExtensions
             options.DocumentName = "v1";
             options.Title = "Car Rental API";
             options.Version = "v1";
-            options.Description = "API de Aluguel de Carros desenvolvida com ASP.NET Core Minimal APIs";
-
+            options.Description = "API de Aluguel de Carros desenvolvida com ASP.NET Core Minimal APIs. " +
+                                  "[Código fonte disponível no GitHub](https://github.com/GustavoHerreira/car-rental-api)";
+            
             // Autenticação JWT no Swagger
             options.AddSecurity("JWT", new OpenApiSecurityScheme
             {

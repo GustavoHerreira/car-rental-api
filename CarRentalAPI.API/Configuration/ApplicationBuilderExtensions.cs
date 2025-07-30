@@ -12,6 +12,8 @@ public static class ApplicationBuilderExtensions
         app.UseOpenApi();
         app.UseSwaggerUi();
         
+        app.UseCors("cors_policy");
+        
         using (var scope = app.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
@@ -27,7 +29,8 @@ public static class ApplicationBuilderExtensions
             }
         }
         
-        app.UseHttpsRedirection();
+        // Deploy na AWS via HTTP apenas
+        // app.UseHttpsRedirection();
 
         app.MapGet("/", () => Results.Redirect("/swagger", permanent: true))
             .ExcludeFromDescription(); // remove do swagger/nswag
