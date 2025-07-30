@@ -125,6 +125,15 @@ public class VehicleEndpointsTests
         var response = await client.PutAsJsonAsync($"/vehicle/{created.Id}", updated);
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+        // Verify that the vehicle was actually updated and not a new one created
+        var getResponse = await client.GetAsync($"/vehicle/{created.Id}");
+        getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var vehicleFromApi = await getResponse.Content.ReadFromJsonAsync<Vehicle>();
+        vehicleFromApi.Should().NotBeNull();
+        vehicleFromApi.Id.Should().Be(created.Id);
+        vehicleFromApi.Brand.Should().Be(updated.Brand);
+        vehicleFromApi.Name.Should().Be(updated.Name);
+        vehicleFromApi.Year.Should().Be(updated.Year);
     }
 
     [TestMethod]

@@ -31,11 +31,23 @@ public class VehicleService(AppDbContext context) : IVehicleService
         return vehicle;
     }
 
-    public async Task<Vehicle> UpdateAsync(Vehicle vehicle)
+    public async Task<Vehicle> UpdateAsync(int id, Vehicle vehicle)
     {
-        context.Vehicles.Update(vehicle);
-        await context.SaveChangesAsync();
-        return vehicle;
+        if (id != vehicle.Id)
+            throw new ArgumentException($"The ID in the URL ({id}) does not match the ID in the vehicle model ({vehicle.Id}).");
+
+        var vehicleToUpdate = await context.Vehicles.FindAsync(vehicle.Id)
+            ?? throw new VehicleNotFound(vehicle.Id);
+
+        // Update fields
+        vehicleToUpdate.Name = vehicle.Name;
+        vehicleToUpdate.Brand = vehicle.Brand;
+        vehicleToUpdate.Year = vehicle.Year;
+
+        if (context.Entry(vehicleToUpdate).State == EntityState.Modified)
+            await context.SaveChangesAsync();
+
+        return vehicleToUpdate;
     }
 
     public async Task<bool> DeleteAsync(int id)

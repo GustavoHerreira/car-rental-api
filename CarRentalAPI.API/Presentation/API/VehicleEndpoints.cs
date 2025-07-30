@@ -2,6 +2,7 @@ using CarRentalAPI.Domain.Entities;
 using CarRentalAPI.Domain.Validations;
 using CarRentalAPI.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using CarRentalAPI.Domain.Exceptions.Vehicles;
 
 namespace CarRentalAPI.Presentation.API;
 
@@ -95,13 +96,16 @@ public static class VehicleEndpoints
 
         try
         {
-            vehicle.Id = id;
-            var updatedVehicle = await vehicleService.UpdateAsync(vehicle);
+            var updatedVehicle = await vehicleService.UpdateAsync(id, vehicle);
             return Results.Ok(updatedVehicle);
+        }
+        catch (VehicleNotFound ex)
+        {
+            return Results.NotFound(new { Error = ex.Message });
         }
         catch (Exception ex)
         {
-            return Results.NotFound(new { Error = ex.Message });
+            return Results.BadRequest(new { Error = ex.Message });
         }
     }
 

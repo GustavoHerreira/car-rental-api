@@ -2,9 +2,7 @@ using CarRentalAPI.Domain.Entities;
 using CarRentalAPI.Infrastructure.Database;
 using CarRentalAPI.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
+using CarRentalAPI.Domain.Exceptions.Vehicles;
 
 namespace CarRentalAPI.Tests.Infrastructure.Services;
 
@@ -92,18 +90,52 @@ public class VehicleServiceTests
     {
         // Arrange
         var db = GetDbContext(nameof(UpdateAsync_UpdatesVehicleFields));
-        db.Vehicles.Add(new Vehicle { Name = "OldName", Brand = "OldBrand", Year = 2019 });
+        var vehicle = new Vehicle { Name = "OldName", Brand = "OldBrand", Year = 2019 };
+        db.Vehicles.Add(vehicle);
         db.SaveChanges();
         var service = new VehicleService(db);
-        var updatedVehicle = new Vehicle { Name = "NewName", Brand = "NewBrand", Year = 2022 };
+        vehicle.Name = "NewName";
+        vehicle.Brand = "NewBrand";
+        vehicle.Year = 2022;
 
         // Act
-        var result = await service.UpdateAsync(updatedVehicle);
-        var allCars = db.Vehicles.ToList();
+        var result = await service.UpdateAsync(vehicle.Id, vehicle);
 
         // Assert
         Assert.AreEqual("NewName", result.Name);
         Assert.AreEqual("NewBrand", result.Brand);
         Assert.AreEqual(2022, result.Year);
+    }
+
+    [TestMethod]
+    public async Task UpdateAsync_ThrowsVehicleNotFound_WhenIdDoesNotExist()
+    {
+        // Arrange
+        var db = GetDbContext(nameof(UpdateAsync_ThrowsVehicleNotFound_WhenIdDoesNotExist));
+        var service = new VehicleService(db);
+        var updatedVehicle = new Vehicle { Id = 999, Name = "DoesNotExist", Brand = "Brand", Year = 2022 };
+
+        // Act & Assert
+        await Assert.ThrowsExceptionAsync<VehicleNotFound>(async () =>
+        {
+            await service.UpdateAsync(999, updatedVehicle);
+        });
+    }
+
+    [TestMethod]
+    public async Task UpdateAsync_ThrowsArgumentException_WhenIdsDoNotMatch()
+    {
+        // Arrange
+        var db = GetDbContext(nameof(UpdateAsync_ThrowsArgumentException_WhenIdsDoNotMatch));
+        db.Vehicles.Add(new Vehicle { Id = 1, Name = "Car", Brand = "Brand", Year = 2020 });
+        db.SaveChanges();
+        var service = new VehicleService(db);
+        var updatedVehicle = new Vehicle { Id = 2, Name = "Car", Brand = "Brand", Year = 2020 };
+
+        // Act & Assert
+        await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+        {
+            await service.UpdateAsync(1, updatedVehicle);
+        });
     }
 }
