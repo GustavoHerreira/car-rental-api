@@ -7,10 +7,10 @@ namespace CarRentalAPI.Infrastructure.Database;
 public class AppDbContext(DbContextOptions<AppDbContext> options)
     : DbContext(options)
 {
-    
-    public DbSet<Administrator> Administrators { get; set; }
-    public DbSet<Vehicle> Vehicles { get; set; }
-    
+
+    public DbSet<Administrator> Administrators { get; set; } = default!;
+    public DbSet<Vehicle> Vehicles { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Adiciona administrador default (hardcoded por motivos de praticidade)
