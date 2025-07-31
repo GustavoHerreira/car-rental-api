@@ -1,4 +1,4 @@
-﻿# 🚗 Car Rental API - Projeto DIO
+# 🚗 Car Rental API - Projeto DIO
 
 Este projeto foi desenvolvido como parte do **Bootcamp da Digital Innovation One (DIO)** com foco em **Minimal APIs em C#**, **Entity Framework Core**, **testes automatizados** e **deploy na AWS**.
 
@@ -33,13 +33,23 @@ A API está atualmente em produção e hospedada na **AWS**, utilizando os segui
   - **Testes de Unidade:** Para validar a lógica de negócio de forma isolada.
   - **Testes de Integração:** Para garantir que os componentes do sistema funcionam corretamente em conjunto, incluindo a interação com o banco de dados de teste rodando em conteiner Docker.
 
+## 🏛️ Arquitetura e Design (Clean Architecture e DDD)
+O projeto foi estruturado seguindo os princípios da ✨**Clean Architecture**✨ e do ✨**Domain-Driven Design (DDD)** ✨, com o objetivo de separar as responsabilidades e criar um sistema coeso e de baixo acoplamento. A organização das camadas é a seguinte:
+
+- **✅ Presentation**: Contém a camada de entrada e interação com o usuário. Neste caso, os endpoints da Minimal API.
+- **✅ Application**: Contém os casos de uso (a lógica da aplicação), definindo o que o sistema faz. Orquestra o domínio e lida com DTOs e interfaces.
+- **✅ Domain**: O núcleo do software. Contém apenas a lógica de negócio pura, com as entidades, enums e regras de negócio.
+- **✅ Infrastructure**: Contém as implementações técnicas e detalhes de baixo nível, como acesso ao banco de dados, envio de e-mails ou comunicação com outras APIs.
+
+Essa abordagem promove um código mais testável, flexível e fácil de manter a longo prazo.
+
+
 ## 🔧 Funcionalidades Implementadas
 
 - ✅ **Autenticação de Administradores:** Cadastro e login com geração de token JWT.
 - ✅ **Autorização baseada em Roles:** Endpoints protegidos que exigem um perfil específico (ex: Admin ou Editor).
 - ✅ **CRUD de Veículos:** Operações completas de criação, leitura, atualização e exclusão de veículos.
 - ✅ **Validações Personalizadas:** Regras de negócio aplicadas nos DTOs e entidades.
-- ✅ **Estrutura Organizada:** Separação de responsabilidades em camadas (Domain, Infrastructure, Presentation).
 - ✅ **Testes Abrangentes:** Cobertura de testes para as principais funcionalidades.
 
 ## 🐳 Como Executar com Docker
@@ -96,7 +106,13 @@ Para aumentar a confiança nos resultados, os testes de integração são execut
 <details>
 <summary><strong>📊 Clique para ver a cobertura de testes</strong></summary>
 <br>
-  <img width="883" height="284" alt="Resultado dos testes" src="https://github.com/user-attachments/assets/c262553f-d8cb-45b5-a3b4-7d00a7c455a8" />
+  <img width="1282" height="260" alt="image" src="https://github.com/user-attachments/assets/24ef21db-c825-46be-bf94-213922088f89" />
 
-  <img width="691" height="1115" alt="Cobertura de testes" src="https://github.com/user-attachments/assets/32f1b1c1-fe68-467b-9aba-0ea268624448" />
+
+  <img width="703" height="1201" alt="image" src="https://github.com/user-attachments/assets/93e097f1-eef7-4030-84f8-af49d242fad6" />
 </details>
+
+
+
+
+
