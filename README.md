@@ -1,8 +1,24 @@
 ﻿# 🚗 Car Rental API - Projeto DIO
 
-Este projeto está a ser desenvolvido como parte do **Bootcamp da Digital Innovation One (DIO)** com foco em **Minimal APIs em C#**, **Entity Framework Core**, **testes automatizados** e **deploy na AWS**.
+Este projeto foi desenvolvido como parte do **Bootcamp da Digital Innovation One (DIO)** com foco em **Minimal APIs em C#**, **Entity Framework Core**, **testes automatizados** e **deploy na AWS**.
 
 **Nota:** Esta é uma implementação própria da ideia proposta no bootcamp, com uma arquitetura e funcionalidades distintas da apresentada pelo professor.
+
+[![Acessar API na AWS](https://img.shields.io/badge/Acessar%20API%20na%20AWS-%23FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](http://18.117.216.57/swagger)
+
+---
+
+## 🚀 Deploy e Acesso Online
+
+A API está atualmente em produção e hospedada na **AWS**, utilizando os seguintes serviços:
+- **Computação:** **Amazon EC2**, onde a aplicação roda dentro de contêineres Docker.
+- **Banco de Dados:** **PostgreSQL**, também em um contêiner Docker na mesma instância EC2.
+- **Deploy:** O processo é feito manualmente via `git pull` e `docker-compose build` diretamente no servidor.
+
+> **Você pode testar a API ao vivo agora mesmo através da documentação interativa do Swagger:**
+> ### **[http://18.117.216.57/swagger](http://18.117.216.57/swagger)**
+
+**Observação:** Como a aplicação está rodando no Nível Gratuito da AWS (instância `t3.micro`), a primeira requisição pode demorar alguns segundos para "acordar" o servidor.
 
 ## 📚 Tecnologias Utilizadas
 
