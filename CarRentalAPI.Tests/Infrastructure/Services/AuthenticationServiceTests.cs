@@ -21,11 +21,16 @@ public class AuthenticationServiceTests
     {
         _mockAdminService = new Mock<IAdministratorService>();
 
-        // Key hardcoded porque é um teste de UNIDADE (isolado)
-        const string jwtKey = "SecretKeyMinimalApiChaveSuperSeguraComTamanhoAdequado32";
-        var jwtOptions = Options.Create(new JwtOptions { Key = jwtKey });
+        var testJwtOptions = new JwtOptions { Key = "SecretKeyMinimalApiChaveSuperSeguraComTamanhoAdequado32" };
 
-        _authService = new AuthenticationService(_mockAdminService.Object, jwtOptions);
+        var mockJwtOptionsSnapshot = new Mock<IOptionsSnapshot<JwtOptions>>();
+
+        mockJwtOptionsSnapshot.Setup(o => o.Value).Returns(testJwtOptions);
+
+        _authService = new AuthenticationService(
+            _mockAdminService.Object, 
+            mockJwtOptionsSnapshot.Object // passando o Mock como argumento
+        );
     }
 
     [TestMethod]
