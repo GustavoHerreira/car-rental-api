@@ -4,7 +4,9 @@ Este projeto foi desenvolvido como parte do **Bootcamp da Digital Innovation One
 
 **Nota:** Esta é uma implementação própria da ideia proposta no bootcamp, com uma arquitetura e funcionalidades distintas da apresentada pelo professor.
 
-[![Acessar API na AWS](https://img.shields.io/badge/Acessar%20API%20na%20AWS-%23FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](http://18.117.216.57/swagger)
+<a href="http://18.117.216.57/swagger" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Acessar%20API%20na%20AWS-%23FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="Acessar API na AWS">
+</a>
 
 ---
 
@@ -16,7 +18,7 @@ A API está atualmente em produção e hospedada na **AWS**, utilizando os segui
 - **Deploy:** O processo é feito manualmente via `git pull` e `docker-compose build` diretamente no servidor.
 
 > **Você pode testar a API ao vivo agora mesmo através da documentação interativa do Swagger:**
-> ### **[http://18.117.216.57/swagger](http://18.117.216.57/swagger)**
+> <h3><a href="http://18.117.216.57/swagger" target="_blank" rel="noopener noreferrer"><strong>http://18.117.216.57/swagger</strong></a></h3>
 
 **Observação:** Como a aplicação está rodando no Nível Gratuito da AWS (instância `t3.micro`), a primeira requisição pode demorar alguns segundos para "acordar" o servidor.
 
