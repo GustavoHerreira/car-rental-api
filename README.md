@@ -13,7 +13,7 @@ Este projeto está a ser desenvolvido como parte do **Bootcamp da Digital Innova
 - **📦 Docker:** O projeto está containerizado para facilitar o desenvolvimento e o deploy. Inclui `Dockerfile` e `docker-compose.yml` para orquestração dos serviços (API e banco de dados).
 - **🧪 Testes Automatizados:**
   - **Testes de Unidade:** Para validar a lógica de negócio de forma isolada.
-  - **Testes de Integração:** Para garantir que os componentes do sistema funcionam corretamente em conjunto, incluindo a interação com o banco de dados de teste.
+  - **Testes de Integração:** Para garantir que os componentes do sistema funcionam corretamente em conjunto, incluindo a interação com o banco de dados de teste rodando em conteiner Docker.
 
 ## 🔧 Funcionalidades Implementadas
 
@@ -64,3 +64,21 @@ Este projeto está a ser desenvolvido como parte do **Bootcamp da Digital Innova
    ```bash
    dotnet run --project CarRentalAPI.API
    ```
+
+## 🧪 Testes Automatizados
+
+🛡️ A confiança na API é construída sobre uma base sólida de testes automatizados que cobrem as principais funcionalidades.
+
+* **🔬 Testes de Unidade:** Focam em validar as menores partes do código e suas regras de negócio.
+* **🤝 Testes de Integração:** Simulam o uso real da aplicação, testando o fluxo completo e a interação com o banco de dados.
+
+### 🐳 Testes em Ambiente Realista
+Para aumentar a confiança nos resultados, os testes de integração são executados em Docker (usando a biblioteca Testcontainers.PostgreSql do Nuget). Isso garante que o ambiente de teste seja uma cópia fiel do ambiente de produção.
+
+<details>
+<summary><strong>📊 Clique para ver a cobertura de testes</strong></summary>
+<br>
+  <img width="883" height="284" alt="Resultado dos testes" src="https://github.com/user-attachments/assets/c262553f-d8cb-45b5-a3b4-7d00a7c455a8" />
+
+  <img width="691" height="1115" alt="Cobertura de testes" src="https://github.com/user-attachments/assets/32f1b1c1-fe68-467b-9aba-0ea268624448" />
+</details>
