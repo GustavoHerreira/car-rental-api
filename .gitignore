@@ -22,6 +22,7 @@ riderModule.iml
 # Arquivos "secretos"
 *.env
 *.pem
+appsettings.Production.json
 
 # Resultados de testes
 TestResults/
