@@ -1,9 +1,9 @@
-﻿using CarRentalAPI.Domain.DTOs.Administrator.Request;
-using CarRentalAPI.Domain.DTOs.Administrator.Response;
-using CarRentalAPI.Domain.DTOs.Authentication;
+﻿using CarRentalAPI.Application.DTOs.Administrator.Request;
+using CarRentalAPI.Application.DTOs.Administrator.Response;
+using CarRentalAPI.Application.DTOs.Authentication;
 using CarRentalAPI.Domain.Entities;
 using CarRentalAPI.Domain.Exceptions.Administrator;
-using CarRentalAPI.Domain.Interfaces;
+using CarRentalAPI.Application.Interfaces;
 using CarRentalAPI.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 

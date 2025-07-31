@@ -1,6 +1,6 @@
-using CarRentalAPI.Domain.DTOs.Administrator.Request;
+using CarRentalAPI.Application.DTOs.Administrator.Request;
+using CarRentalAPI.Application.Interfaces;
 using CarRentalAPI.Domain.Exceptions.Administrator;
-using CarRentalAPI.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalAPI.Presentation.API;

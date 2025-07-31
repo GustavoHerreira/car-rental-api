@@ -1,5 +1,5 @@
-using CarRentalAPI.Domain.DTOs.Authentication;
-using CarRentalAPI.Domain.Interfaces;
+using CarRentalAPI.Application.DTOs.Authentication;
+using CarRentalAPI.Application.Interfaces;
 
 namespace CarRentalAPI.Presentation.API;
 

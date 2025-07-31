@@ -1,8 +1,8 @@
-﻿using CarRentalAPI.Domain.DTOs.Authentication;
+﻿using CarRentalAPI.Application.DTOs.Authentication;
+using CarRentalAPI.Application.Interfaces;
+using CarRentalAPI.Application.ModelViews;
+using CarRentalAPI.Configuration.Options;
 using CarRentalAPI.Domain.Entities;
-using CarRentalAPI.Domain.Interfaces;
-using CarRentalAPI.Domain.ModelViews;
-using CarRentalAPI.Domain.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

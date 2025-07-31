@@ -1,8 +1,8 @@
+using CarRentalAPI.Application.Validations;
+using CarRentalAPI.Application.Interfaces;
 using CarRentalAPI.Domain.Entities;
-using CarRentalAPI.Domain.Validations;
-using CarRentalAPI.Domain.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using CarRentalAPI.Domain.Exceptions.Vehicles;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalAPI.Presentation.API;
 

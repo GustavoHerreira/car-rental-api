@@ -1,10 +1,10 @@
 using System.Security.Claims;
 using System.Text;
 using CarRentalAPI.Domain.Enums;
-using CarRentalAPI.Domain.Interfaces;
+using CarRentalAPI.Application.Interfaces;
 using CarRentalAPI.Infrastructure.Database;
 using CarRentalAPI.Infrastructure.Services;
-using CarRentalAPI.Domain.Options;
+using CarRentalAPI.Configuration.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

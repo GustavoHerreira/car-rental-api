@@ -1,6 +1,6 @@
 using CarRentalAPI.Domain.Entities;
 using CarRentalAPI.Domain.Exceptions.Vehicles;
-using CarRentalAPI.Domain.Interfaces;
+using CarRentalAPI.Application.Interfaces;
 using CarRentalAPI.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
