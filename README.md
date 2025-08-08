@@ -60,7 +60,7 @@ Este projeto adota os princípios da **Clean Architecture** para separar as resp
 
 ---
 
-## 🚀 Como Executar o Projeto
+## 🚀 Como Executar o Projeto localmente
 
 ### Pré-requisitos
 
