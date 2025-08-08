@@ -1,118 +1,108 @@
-# 🚗 Car Rental API - Projeto DIO
+# 🚗 Car Rental API
 
-Este projeto foi desenvolvido como parte do **Bootcamp da Digital Innovation One (DIO)** com foco em **Minimal APIs em C#**, **Entity Framework Core**, **testes automatizados** e **deploy na AWS**.
+API RESTful robusta para um sistema de aluguel de veículos, desenvolvida com as tecnologias mais modernas do ecossistema .NET. Este projeto demonstra a aplicação de conceitos avançados de arquitetura de software, como **Clean Architecture** e **Domain-Driven Design (DDD)**, além de uma suíte completa de testes automatizados e deploy em nuvem.
 
-**Nota:** Esta é uma implementação própria da ideia proposta no bootcamp, com uma arquitetura e funcionalidades distintas da apresentada pelo professor.
-
-<a href="http://18.117.216.57/swagger" target="_blank" rel="noopener noreferrer">
-    <img src="https://img.shields.io/badge/Acessar%20API%20na%20AWS-%23FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="Acessar API na AWS">
-</a>
+<p align="center">
+  <img src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 9">
+  <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white" alt="C#">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS">
+</p>
 
 ---
 
-## 🚀 Deploy e Acesso Online
+## ✨ Principais Features
 
-A API está atualmente em produção e hospedada na **AWS**, utilizando os seguintes serviços:
-- **Computação:** **Amazon EC2**, onde a aplicação roda dentro de contêineres Docker.
-- **Banco de Dados:** **PostgreSQL**, também em um contêiner Docker na mesma instância EC2.
-- **Deploy:** O processo é feito manualmente via `git pull` e `docker-compose build` diretamente no servidor.
+* **🏛️ Arquitetura Limpa (Clean Architecture) e DDD:** Código desacoplado, testável e de fácil manutenção.
+* **🔐 Autenticação e Autorização:** Segurança implementada com JWT e Policies baseadas em Roles (Perfis).
+* **📦 Containerização com Docker:** Ambiente de desenvolvimento e produção padronizado e portável.
+* **🧪 Suíte de Testes Completa:** Testes de Unidade e de Integração (com Testcontainers que executam em Docker) garantindo a confiabilidade do sistema.
+* **☁️ Deploy na AWS:** Aplicação hospedada na nuvem e acessível publicamente.
 
-> **Você pode testar a API ao vivo agora mesmo através da documentação interativa do Swagger:**
-> <h3><a href="http://18.117.216.57/swagger" target="_blank" rel="noopener noreferrer"><strong>http://18.117.216.57/swagger</strong></a></h3>
+---
 
-**Observação:** Como a aplicação está rodando no Nível Gratuito da AWS (instância `t3.micro`), a primeira requisição pode demorar alguns segundos para "acordar" o servidor.
+## 🚀 API em Produção (Live Demo)
 
-## 📚 Tecnologias Utilizadas
+A API está em produção na AWS e pode ser acessada e testada através da documentação interativa do Swagger.
 
-- **🚀 .NET 9:** A versão mais recente do framework da Microsoft, com foco em performance e Minimal APIs.
-- **💾 Entity Framework Core (EF Core):** ORM para interação com o banco de dados PostgreSQL.
-- **📄 Swagger (NSwag):** Documentação e teste interativo da API.
-- **🔐 Autenticação e Autorização:** Implementação com JWT (JSON Web Tokens) para proteger os endpoints, com base em perfis (Roles).
-- **📦 Docker:** O projeto está containerizado para facilitar o desenvolvimento e o deploy. Inclui `Dockerfile` e `docker-compose.yml` para orquestração dos serviços (API e banco de dados).
-- **🧪 Testes Automatizados:**
-  - **Testes de Unidade:** Para validar a lógica de negócio de forma isolada.
-  - **Testes de Integração:** Para garantir que os componentes do sistema funcionam corretamente em conjunto, incluindo a interação com o banco de dados de teste rodando em conteiner Docker.
+<p align="center">
+  <a href="http://18.117.216.57/swagger" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Testar%20API%20ao%20vivo%20na%20AWS-%23FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="Acessar API na AWS">
+  </a>
+</p>
 
-## 🏛️ Arquitetura e Design (Clean Architecture e DDD)
-O projeto foi estruturado seguindo os princípios da ✨**Clean Architecture**✨ e do ✨**Domain-Driven Design (DDD)** ✨, com o objetivo de separar as responsabilidades e criar um sistema coeso e de baixo acoplamento. A organização das camadas é a seguinte:
+> **Observação:** A aplicação roda no Nível Gratuito da AWS (instância `t3.micro`). A primeira requisição pode levar alguns segundos para "acordar" o servidor.
 
-- **✅ Presentation**: Contém a camada de entrada e interação com o usuário. Neste caso, os endpoints da Minimal API.
-- **✅ Application**: Contém os casos de uso (a lógica da aplicação), definindo o que o sistema faz. Orquestra o domínio e lida com DTOs e interfaces.
-- **✅ Domain**: O núcleo do software. Contém apenas a lógica de negócio pura, com as entidades, enums e regras de negócio.
-- **✅ Infrastructure**: Contém as implementações técnicas e detalhes de baixo nível, como acesso ao banco de dados, envio de e-mails ou comunicação com outras APIs.
+---
 
-Essa abordagem promove um código mais testável, flexível e fácil de manter a longo prazo.
+## 🏛️ Arquitetura
 
+Este projeto adota os princípios da **Clean Architecture** para separar as responsabilidades em camadas bem definidas, garantindo um sistema coeso e de baixo acoplamento.
 
-## 🔧 Funcionalidades Implementadas
+* **Domain:** O núcleo do software. Contém as entidades de negócio e a lógica de domínio pura.
+* **Application:** Orquestra o fluxo de dados e contém a lógica dos casos de uso.
+* **Infrastructure:** Implementa os detalhes técnicos, como acesso ao banco de dados (EF Core) e serviços.
+* **Presentation:** A camada de entrada da aplicação, onde os endpoints da API (Minimal API) são definidos.
 
-- ✅ **Autenticação de Administradores:** Cadastro e login com geração de token JWT.
-- ✅ **Autorização baseada em Roles:** Endpoints protegidos que exigem um perfil específico (ex: Admin ou Editor).
-- ✅ **CRUD de Veículos:** Operações completas de criação, leitura, atualização e exclusão de veículos.
-- ✅ **Validações Personalizadas:** Regras de negócio aplicadas nos DTOs e entidades.
-- ✅ **Testes Abrangentes:** Cobertura de testes para as principais funcionalidades.
+---
 
-## 🐳 Como Executar com Docker
+## 🛠️ Tecnologias Utilizadas
 
-1. **Clone o repositório:**
-   ```bash
-   git clone https://github.com/seu-usuario/CarRentalAPI.git
-   cd CarRentalAPI
-   ```
+* **.NET 9** e **ASP.NET Core** para construção de Minimal APIs
+* **Entity Framework Core** como ORM para acesso ao banco de dados
+* **PostgreSQL** como banco de dados relacional
+* **Docker** e **Docker Compose** para containerização
+* **JWT (JSON Web Tokens)** para autenticação e autorização utlizando Microsoft.Identity
+* **MSTest**, **FluentAssertions** e **Moq** para testes de unidade
+* **Testcontainers (docker)** para testes de integração em um ambiente realista
+* **NSwag** para geração da documentação OpenAPI (Swagger)
 
-2. **Crie o arquivo de ambiente:**
-   Crie um arquivo `.env` na raiz do projeto. Ele é essencial para configurar as variáveis de ambiente que o `docker-compose.yml` utiliza para subir os serviços. Exemplo de conteúdo:
-   ```env
-   POSTGRES_DB=carrentaldb
-   POSTGRES_USER=user
-   POSTGRES_PASSWORD=password
-   ```
+---
 
-3. **Execute o Docker Compose:**
-   ```bash
-   docker-compose up -d
-   ```
+## 🐳 Como Executar o Projeto
 
-4. **Acesse a API:**
-   - A API estará disponível em `http://localhost:8080`
-   - A documentação do Swagger estará em `http://localhost:8080/swagger`
+### Pré-requisitos
 
-## ⚙️ Como Executar Localmente (Sem Docker)
+* [Git](https://git-scm.com/)
+* [Docker](https://www.docker.com/products/docker-desktop/)
 
-1. **Configure o Banco de Dados:**
-   - Certifique-se de ter o PostgreSQL instalado.
-   - Atualize a `ConnectionString` no arquivo `appsettings.Development.json` para refletir suas configurações locais.
+### 🐳 Rodando com Docker (Recomendado)
 
-2. **Execute as Migrations:**
-   ```bash
-   dotnet ef database update
-   ```
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/GustavoHerreira/car-rental-api.git
+    cd car-rental-api
+    ```
 
-3. **Inicie a Aplicação:**
-   ```bash
-   dotnet run --project CarRentalAPI.API
-   ```
+2. **Crie o arquivo de ambiente a partir do exemplo:**
+    * Faça uma cópia do arquivo `.env.example` e renomeie a cópia para `.env`.
+    * Altere as variáveis dentro do novo arquivo `.env` conforme necessário.
 
-## 🧪 Testes Automatizados
+3.  **Suba os contêineres:**
+    ```bash
+    docker-compose up -d
+    ```
 
-🛡️ A confiança na API é construída sobre uma base sólida de testes automatizados que cobrem as principais funcionalidades.
+4.  **Pronto!** A aplicação estará acessível:
+    * **API:** `http://localhost:8080` (deve te redirecionar pra o Swagger)
+    * **Swagger UI:** `http://localhost:8080/swagger`
 
-* **🔬 Testes de Unidade:** Focam em validar as menores partes do código e suas regras de negócio.
-* **🤝 Testes de Integração:** Simulam o uso real da aplicação, testando o fluxo completo e a interação com o banco de dados.
+---
 
-### 🐳 Testes em Ambiente Realista
-Para aumentar a confiança nos resultados, os testes de integração são executados em Docker (usando a biblioteca Testcontainers.PostgreSql do Nuget). Isso garante que o ambiente de teste seja uma cópia fiel do ambiente de produção.
+## 🧪 Como Executar os Testes
 
+Os testes garantem a qualidade e a estabilidade da aplicação.
+
+* **Para rodar todos os testes (unidade e integração):**
+    ```bash
+    dotnet test
+    ```
 <details>
 <summary><strong>📊 Clique para ver a cobertura de testes</strong></summary>
 <br>
-  <img width="1282" height="260" alt="image" src="https://github.com/user-attachments/assets/24ef21db-c825-46be-bf94-213922088f89" />
+  <img width="1282" height="260" alt="image" src="https://github.com/user-attachments/assets/24ef21db-c825-46be-bf94-213922088f89" />
 
 
-  <img width="703" height="1201" alt="image" src="https://github.com/user-attachments/assets/93e097f1-eef7-4030-84f8-af49d242fad6" />
+  <img width="703" height="1201" alt="image" src="https://github.com/user-attachments/assets/93e097f1-eef7-4030-84f8-af49d242fad6" />
 </details>
-
-
-
-
-
